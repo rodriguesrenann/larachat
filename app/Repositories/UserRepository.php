@@ -17,6 +17,6 @@ class UserRepository implements UserRepositoryInterface
 
     public function getAll(): Collection
     {
-        return $this->model->all();
+        return $this->model->where('id', '<>', auth()->user()->id)->get();
     }
 }
