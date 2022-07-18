@@ -25,6 +25,8 @@
         "vue-template-compiler": "^2.6.12"
     },
     "dependencies": {
-        "autoprefixer": "10.4.5"
+        "autoprefixer": "10.4.5",
+        "laravel-echo": "^1.12.1",
+        "socket.io-client": "^4.5.1"
     }
 }
