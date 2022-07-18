@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Events\NewMessageCreated;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Messages\MessageRequest;
 use App\Http\Resources\MessageResource;
@@ -31,6 +32,8 @@ class MessageController extends Controller
     public function store(MessageRequest $request): JsonResource
     {
         $resource = $this->messageRepository->create($request->validated());
+
+        event(new NewMessageCreated($resource));
 
         return new MessageResource($resource);
     }
