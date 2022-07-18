@@ -27,6 +27,8 @@
     "dependencies": {
         "autoprefixer": "10.4.5",
         "laravel-echo": "^1.12.1",
-        "socket.io-client": "^4.5.1"
+        "socket.io-client": "^2.3.0",
+        "vuex": "^3.6.2",
+        "vue-toastify": "^1.8.0"
     }
 }
