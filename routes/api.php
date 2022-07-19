@@ -15,9 +15,9 @@ use Illuminate\Support\Facades\Route;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
-;
-Route::group([
-], function () {
-    Route::get('/message/create', [MessageController::class, 'store']);
-    Route::get('/users', [UserController::class, 'index'])->name('users.index');
-});
+
+Route::middleware(['auth:web'])
+    ->group(function () {
+        Route::get('/message/create', [MessageController::class, 'store']);
+        Route::get('/users', [UserController::class, 'index'])->name('users.index');
+    });
