@@ -6008,17 +6008,24 @@ render._withStripped = true;
 /*!******************************!*\
   !*** ./resources/js/Echo.js ***!
   \******************************/
-/***/ (() => {
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _vuex_store__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./vuex/store */ "./resources/js/vuex/store.js");
 
 window.Echo.join('larachat_database_chatroom').here(function (users) {
   console.log('Usuários online');
   console.log(users);
+  _vuex_store__WEBPACK_IMPORTED_MODULE_0__["default"].commit('ADD_ONLINE_USERS', users);
 }).joining(function (user) {
   console.log('Entrou');
   console.log(user);
+  _vuex_store__WEBPACK_IMPORTED_MODULE_0__["default"].commit('ADD_ONLINE_USER', user);
 }).leaving(function (user) {
   console.log('Saiu');
   console.log(user);
+  _vuex_store__WEBPACK_IMPORTED_MODULE_0__["default"].commit('REMOVE_ONLINE_USER', user);
 });
 
 /***/ }),
@@ -6196,6 +6203,17 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   SET_USERS: function SET_USERS(state, users) {
     state.users = users;
+  },
+  ADD_ONLINE_USERS: function ADD_ONLINE_USERS(state, users) {
+    state.onlineUsers = users;
+  },
+  ADD_ONLINE_USER: function ADD_ONLINE_USER(state, user) {
+    state.onlineUsers.push(user);
+  },
+  REMOVE_ONLINE_USER: function REMOVE_ONLINE_USER(state, user) {
+    state.onlineUsers = state.onlineUsers.filter(function (u) {
+      return u.email != user.email;
+    });
   }
 });
 
@@ -6215,7 +6233,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   users: {
     data: []
-  }
+  },
+  onlineUsers: []
 });
 
 /***/ }),
