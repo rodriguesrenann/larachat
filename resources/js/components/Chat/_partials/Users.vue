@@ -5,7 +5,7 @@
                 Conversas
             </h3>
             <div class="relative my-5 text-gray-600">
-                <input type="search" name="serch" placeholder="Search"
+                <input type="search" v-model="filter" name="serch" placeholder="Search"
                     class="w-full bg-gray-100 h-10 px-5 pr-10 rounded-full text-sm focus:outline-none focus:shadow-lg focus:bg-white hover:shadow-md" />
                 <button type="submit" class="absolute right-0 top-0 mt-3 mr-4">
                     <svg class="h-4 w-4 fill-current" xmlns="http://www.w3.org/2000/svg"
@@ -20,7 +20,7 @@
         </div>
         <!-- users -->
         <ul class="flex flex-col chat-list">
-            <div v-for="(user, index) in allUsers" :key="index">
+            <div v-for="(user, index) in users" :key="index">
                 <li class="bg-white hover:bg-gray-100 border-b p-4 cursor-pointer"
                     :class="{ 'is-active': activeChat === index }">
                     <div class="flex items-center relative">
@@ -67,13 +67,22 @@ export default {
 
         ...mapGetters({
             allUsers : 'sortedUsers'
-        })
+        }),
+
+        users () {
+            return this.allUsers.filter(user => {
+                if (this.filter === '') return user
+
+                return user.name.includes(this.filter) || user.email === this.filter
+            })
+        }
     },
 
     data() {
         return {
             selected: "inbox",
             activeChat: 0,
+            filter: ''
         };
     },
 

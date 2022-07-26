@@ -5421,15 +5421,23 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
   mounted: function mounted() {
     this.getUsers();
   },
-  computed: _objectSpread({}, (0,vuex__WEBPACK_IMPORTED_MODULE_0__.mapState)({
-    users: function users(state) {
-      return state.users.users;
+  computed: _objectSpread(_objectSpread({}, (0,vuex__WEBPACK_IMPORTED_MODULE_0__.mapGetters)({
+    allUsers: 'sortedUsers'
+  })), {}, {
+    users: function users() {
+      var _this = this;
+
+      return this.allUsers.filter(function (user) {
+        if (_this.filter === '') return user;
+        return user.name.includes(_this.filter) || user.email === _this.filter;
+      });
     }
-  })),
+  }),
   data: function data() {
     return {
       selected: "inbox",
-      activeChat: 0
+      activeChat: 0,
+      filter: ''
     };
   },
   methods: _objectSpread({}, (0,vuex__WEBPACK_IMPORTED_MODULE_0__.mapActions)(['getUsers']))
@@ -5876,11 +5884,26 @@ var render = function render() {
   }, [_vm._v("\n            Conversas\n        ")]), _vm._v(" "), _c("div", {
     staticClass: "relative my-5 text-gray-600"
   }, [_c("input", {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: _vm.filter,
+      expression: "filter"
+    }],
     staticClass: "w-full bg-gray-100 h-10 px-5 pr-10 rounded-full text-sm focus:outline-none focus:shadow-lg focus:bg-white hover:shadow-md",
     attrs: {
       type: "search",
       name: "serch",
       placeholder: "Search"
+    },
+    domProps: {
+      value: _vm.filter
+    },
+    on: {
+      input: function input($event) {
+        if ($event.target.composing) return;
+        _vm.filter = $event.target.value;
+      }
     }
   }), _vm._v(" "), _c("button", {
     staticClass: "absolute right-0 top-0 mt-3 mr-4",
@@ -5910,7 +5933,7 @@ var render = function render() {
     }
   })])])])]), _vm._v(" "), _c("ul", {
     staticClass: "flex flex-col chat-list"
-  }, _vm._l(_vm.users.data, function (user, index) {
+  }, _vm._l(_vm.users, function (user, index) {
     return _c("div", {
       key: index
     }, [_c("li", {
@@ -6157,7 +6180,28 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({});
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
+  sortedUsers: function sortedUsers(state) {
+    var users = state.users.data;
+    var onlineUsers = state.onlineUsers; //Ordenação dos usuários
+
+    users = users.sort(function (user) {
+      var index = onlineUsers.findIndex(function (u) {
+        return u.email === user.email;
+      });
+      return index === -1 ? 1 : -1;
+    }); //Usuários mapeados para online
+
+    users = users.map(function (user) {
+      var index = onlineUsers.findIndex(function (u) {
+        return u.email === user.email;
+      });
+      user.online = index != -1;
+      return user;
+    });
+    return users;
+  }
+});
 
 /***/ }),
 

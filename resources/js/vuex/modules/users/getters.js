@@ -1,5 +1,5 @@
 export default {
-    sortedUsers(state) {
+    sortedUsers (state) {
         let users = state.users.data
         const onlineUsers = state.onlineUsers
 
@@ -14,6 +14,8 @@ export default {
         users = users.map(user => {
             const index = onlineUsers.findIndex(u => u.email === user.email)
             user.online = index != -1
+
+            return user
         })
 
         return users
