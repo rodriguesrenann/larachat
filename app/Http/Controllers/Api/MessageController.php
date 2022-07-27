@@ -37,4 +37,18 @@ class MessageController extends Controller
 
         return new MessageResource($resource);
     }
+
+    /**
+     * Recupera as mensagens do usuário logado com usuario do id
+     *
+     * @param int $id
+     *
+     * @return JsonResource
+     */
+    public function show(int $id): JsonResource
+    {
+        $resource = $this->messageRepository->messagesFromId($id);
+
+        return MessageResource::collection($resource);
+    }
 }

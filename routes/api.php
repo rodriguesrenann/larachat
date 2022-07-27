@@ -18,6 +18,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::middleware(['auth:web'])
     ->group(function () {
+        Route::get('/messages/{user}', [MessageController::class, 'show']);
         Route::get('/message/create', [MessageController::class, 'store']);
         Route::get('/users', [UserController::class, 'index'])->name('users.index');
     });

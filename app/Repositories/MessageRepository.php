@@ -22,4 +22,18 @@ class MessageRepository implements MessageRepositoryInterface
             'message' => $data['message']
         ]);
     }
+
+    public function messagesFromId(int $id)
+    {
+        return $this->model->where(function ($query) use ($id) {
+            $query->where('sender_id', auth()->user()->id);
+            $query->where('receiver_id', $id);
+        })
+            ->orWhere(function ($query) use ($id) {
+                $query->where('sender_id', $id);
+                $query->where('receiver_id', auth()->user()->id);
+            })
+            ->with(['sender', 'receiver'])
+            ->get();
+    }
 }
