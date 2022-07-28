@@ -5440,7 +5440,14 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       filter: ''
     };
   },
-  methods: _objectSpread({}, (0,vuex__WEBPACK_IMPORTED_MODULE_0__.mapActions)(['getUsers']))
+  methods: _objectSpread(_objectSpread(_objectSpread({}, (0,vuex__WEBPACK_IMPORTED_MODULE_0__.mapMutations)({
+    addUserChat: 'ADD_USER_CONVERSATION'
+  })), (0,vuex__WEBPACK_IMPORTED_MODULE_0__.mapActions)(['getUsers'])), {}, {
+    openChatWithUser: function openChatWithUser(user) {
+      this.activeChat = user.id;
+      this.addUserChat(user);
+    }
+  })
 });
 
 /***/ }),
@@ -5937,9 +5944,12 @@ var render = function render() {
     return _c("div", {
       key: index
     }, [_c("li", {
-      staticClass: "bg-white hover:bg-gray-100 border-b p-4 cursor-pointer",
-      "class": {
-        "is-active": _vm.activeChat === index
+      "class": ["hover:bg-gray-100", "border-b", "p-4", "cursor-pointer", _vm.activeChat === user.id ? "is-active" : "bg-white"],
+      on: {
+        click: function click($event) {
+          $event.preventDefault();
+          return _vm.openChatWithUser(user);
+        }
       }
     }, [_c("div", {
       staticClass: "flex items-center relative"
@@ -6144,6 +6154,56 @@ __webpack_require__(/*! ./Echo */ "./resources/js/Echo.js");
 
 /***/ }),
 
+/***/ "./resources/js/vuex/modules/chat/index.js":
+/*!*************************************************!*\
+  !*** ./resources/js/vuex/modules/chat/index.js ***!
+  \*************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_0__);
+
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
+  state: {
+    userConversation: null,
+    messages: []
+  },
+  mutations: {
+    ADD_USER_CONVERSATION: function ADD_USER_CONVERSATION(state, user) {
+      state.userConversation = user;
+    },
+    REMOVE_USER_CONVERSATION: function REMOVE_USER_CONVERSATION(state) {
+      state.userConversation = null;
+    },
+    ADD_MESSAGES: function ADD_MESSAGES(state, messages) {
+      state.messages = messages;
+    },
+    ADD_MESSAGE: function ADD_MESSAGE(state, message) {
+      state.messages.push(message);
+    },
+    CLEAR_MESSAGES: function CLEAR_MESSAGES(state) {
+      state.messages = [];
+    }
+  },
+  actions: {
+    getMessagesConversation: function getMessagesConversation(_ref) {
+      var state = _ref.state,
+          commit = _ref.commit;
+      return axios__WEBPACK_IMPORTED_MODULE_0___default().get("/api/messages/".concat(state.userConversation.id)).then(function (response) {
+        return commit('ADD_MESSAGES', response.data.data);
+      });
+    }
+  },
+  getters: {}
+});
+
+/***/ }),
+
 /***/ "./resources/js/vuex/modules/users/actions.js":
 /*!****************************************************!*\
   !*** ./resources/js/vuex/modules/users/actions.js ***!
@@ -6294,16 +6354,19 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
-/* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.esm.js");
-/* harmony import */ var vuex__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! vuex */ "./node_modules/vuex/dist/vuex.esm.js");
+/* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.esm.js");
+/* harmony import */ var vuex__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! vuex */ "./node_modules/vuex/dist/vuex.esm.js");
 /* harmony import */ var _modules_users__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./modules/users */ "./resources/js/vuex/modules/users/index.js");
+/* harmony import */ var _modules_chat__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./modules/chat */ "./resources/js/vuex/modules/chat/index.js");
 
 
 
-vue__WEBPACK_IMPORTED_MODULE_1__["default"].use(vuex__WEBPACK_IMPORTED_MODULE_2__["default"]);
-var store = new vuex__WEBPACK_IMPORTED_MODULE_2__["default"].Store({
+
+vue__WEBPACK_IMPORTED_MODULE_2__["default"].use(vuex__WEBPACK_IMPORTED_MODULE_3__["default"]);
+var store = new vuex__WEBPACK_IMPORTED_MODULE_3__["default"].Store({
   modules: {
-    users: _modules_users__WEBPACK_IMPORTED_MODULE_0__["default"]
+    users: _modules_users__WEBPACK_IMPORTED_MODULE_0__["default"],
+    chat: _modules_chat__WEBPACK_IMPORTED_MODULE_1__["default"]
   }
 });
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (store);

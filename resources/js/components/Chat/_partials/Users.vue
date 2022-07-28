@@ -21,12 +21,12 @@
         <!-- users -->
         <ul class="flex flex-col chat-list">
             <div v-for="(user, index) in users" :key="index">
-                <li class="bg-white hover:bg-gray-100 border-b p-4 cursor-pointer"
-                    :class="{ 'is-active': activeChat === index }">
+                <li @click.prevent="openChatWithUser(user)" :class="['hover:bg-gray-100', 'border-b',
+                'p-4', 'cursor-pointer', activeChat === user.id ? 'is-active' : 'bg-white']">
                     <div class="flex items-center relative">
                         <div class="relative">
-                            <img :src="[user.photo != '' ? user.photo : 'images/default.png']"
-                                :alt="[user.name]" class="w-12 h-12 rounded-full" />
+                            <img :src="[user.photo != '' ? user.photo : 'images/default.png']" :alt="[user.name]"
+                                class="w-12 h-12 rounded-full" />
                             <span v-if="user.online"
                                 class="text-green-500 absolute -bottom-0.5 -right-0.5 rounded-full bg-white border-white border-4">
                                 <svg width="10" height="10">
@@ -53,7 +53,7 @@
 </template>
 
 <script>
-import {mapActions, mapState, mapGetters} from 'vuex';
+import { mapActions, mapState, mapGetters, mapMutations } from 'vuex';
 
 export default {
     mounted() {
@@ -66,10 +66,10 @@ export default {
         }) */
 
         ...mapGetters({
-            allUsers : 'sortedUsers'
+            allUsers: 'sortedUsers'
         }),
 
-        users () {
+        users() {
             return this.allUsers.filter(user => {
                 if (this.filter === '') return user
 
@@ -87,7 +87,15 @@ export default {
     },
 
     methods: {
-        ...mapActions(['getUsers'])
+        ...mapMutations({
+            addUserChat: 'ADD_USER_CONVERSATION'
+        }),
+        ...mapActions(['getUsers']),
+
+        openChatWithUser(user) {
+            this.activeChat = user.id
+            this.addUserChat(user)
+        }
     },
 };
 </script>
